@@ -1,16 +1,30 @@
 import React, { useState } from 'react';
 import { Plus, Link as LinkIcon, Calendar, Database, Trash2, X } from 'lucide-react';
-import { Role, RoleStatus } from '../types';
+import { Role, RoleStatus, Contact, Activity } from '../types';
 import { seedTestData } from '../utils/seedData';
+import { ActivitySection } from './ActivitySection';
 
 interface RolesViewProps {
     roles: Role[];
+    contacts: Contact[];
+    activities: Activity[];
     onAdd: (role: Omit<Role, 'id' | 'updatedAt'>) => void;
     onUpdate: (id: string, updates: Partial<Role>) => void;
     onDelete: (id: string) => void;
+    onAddActivity: (activity: Omit<Activity, 'id'>) => void;
+    onDeleteActivity: (id: string) => void;
 }
 
-export const RolesView: React.FC<RolesViewProps> = ({ roles, onAdd, onUpdate, onDelete }) => {
+export const RolesView: React.FC<RolesViewProps> = ({
+    roles,
+    contacts,
+    activities,
+    onAdd,
+    onUpdate,
+    onDelete,
+    onAddActivity,
+    onDeleteActivity
+}) => {
     const [isAdding, setIsAdding] = useState(false);
     const [editingRole, setEditingRole] = useState<Role | null>(null);
     const [newRole, setNewRole] = useState<Omit<Role, 'id' | 'updatedAt'>>({
@@ -49,68 +63,81 @@ export const RolesView: React.FC<RolesViewProps> = ({ roles, onAdd, onUpdate, on
             </div>
 
             {(isAdding || editingRole) && (
-                <form onSubmit={handleSubmit} className="card mb-3">
-                    <div className="flex-between mb-2">
-                        <h2 className="m-0 font-sm">{editingRole ? 'Edit Role' : 'Add New Role'}</h2>
-                        <button type="button" className="secondary p-04 br-50 bg-none border-none" onClick={() => { setIsAdding(false); setEditingRole(null); }}>
-                            <X size={18} />
-                        </button>
-                    </div>
-                    <div className="flex flex-col gap-1">
-                        <input
-                            className="input"
-                            placeholder="Company"
-                            value={editingRole ? editingRole.company : newRole.company}
-                            onChange={(e) => editingRole
-                                ? setEditingRole({ ...editingRole, company: e.target.value })
-                                : setNewRole({ ...newRole, company: e.target.value })}
-                            required
-                        />
-                        <input
-                            className="input"
-                            placeholder="Position"
-                            value={editingRole ? editingRole.position : newRole.position}
-                            onChange={(e) => editingRole
-                                ? setEditingRole({ ...editingRole, position: e.target.value })
-                                : setNewRole({ ...newRole, position: e.target.value })}
-                            required
-                        />
-                        <select
-                            className="input"
-                            value={editingRole ? editingRole.status : newRole.status}
-                            onChange={(e) => editingRole
-                                ? setEditingRole({ ...editingRole, status: e.target.value as RoleStatus })
-                                : setNewRole({ ...newRole, status: e.target.value as RoleStatus })}
-                        >
-                            <option value="Interested">Interested</option>
-                            <option value="Applied">Applied</option>
-                            <option value="Interviewing">Interviewing</option>
-                            <option value="Offered">Offered</option>
-                            <option value="Rejected">Rejected</option>
-                        </select>
-                        <div className="flex-between gap-1">
-                            {editingRole ? (
-                                <>
-                                    <button type="button" className="secondary danger flex-1" onClick={() => { onDelete(editingRole.id); setEditingRole(null); }}>
-                                        <Trash2 size={16} /> Delete
-                                    </button>
-                                    <button type="submit" className="flex-1">
-                                        Save Changes
-                                    </button>
-                                </>
-                            ) : (
-                                <>
-                                    <button type="button" className="secondary flex-1" onClick={() => setIsAdding(false)}>
-                                        Cancel
-                                    </button>
-                                    <button type="submit" className="flex-1">
-                                        Add
-                                    </button>
-                                </>
-                            )}
+                <div className="card mb-3">
+                    <form onSubmit={handleSubmit}>
+                        <div className="flex-between mb-2">
+                            <h2 className="m-0 font-sm">{editingRole ? 'Edit Role' : 'Add New Role'}</h2>
+                            <button type="button" className="secondary p-04 br-50 bg-none border-none" onClick={() => { setIsAdding(false); setEditingRole(null); }}>
+                                <X size={18} />
+                            </button>
                         </div>
-                    </div>
-                </form>
+                        <div className="flex flex-col gap-1">
+                            <input
+                                className="input"
+                                placeholder="Company"
+                                value={editingRole ? editingRole.company : newRole.company}
+                                onChange={(e) => editingRole
+                                    ? setEditingRole({ ...editingRole, company: e.target.value })
+                                    : setNewRole({ ...newRole, company: e.target.value })}
+                                required
+                            />
+                            <input
+                                className="input"
+                                placeholder="Position"
+                                value={editingRole ? editingRole.position : newRole.position}
+                                onChange={(e) => editingRole
+                                    ? setEditingRole({ ...editingRole, position: e.target.value })
+                                    : setNewRole({ ...newRole, position: e.target.value })}
+                                required
+                            />
+                            <select
+                                className="input"
+                                value={editingRole ? editingRole.status : newRole.status}
+                                onChange={(e) => editingRole
+                                    ? setEditingRole({ ...editingRole, status: e.target.value as RoleStatus })
+                                    : setNewRole({ ...newRole, status: e.target.value as RoleStatus })}
+                            >
+                                <option value="Interested">Interested</option>
+                                <option value="Applied">Applied</option>
+                                <option value="Interviewing">Interviewing</option>
+                                <option value="Offered">Offered</option>
+                                <option value="Rejected">Rejected</option>
+                            </select>
+                            <div className="flex-between gap-1">
+                                {editingRole ? (
+                                    <>
+                                        <button type="button" className="secondary danger flex-1" onClick={() => { onDelete(editingRole.id); setEditingRole(null); }}>
+                                            <Trash2 size={16} /> Delete
+                                        </button>
+                                        <button type="submit" className="flex-1">
+                                            Save Changes
+                                        </button>
+                                    </>
+                                ) : (
+                                    <>
+                                        <button type="button" className="secondary flex-1" onClick={() => setIsAdding(false)}>
+                                            Cancel
+                                        </button>
+                                        <button type="submit" className="flex-1">
+                                            Add
+                                        </button>
+                                    </>
+                                )}
+                            </div>
+                        </div>
+                    </form>
+
+                    {editingRole && (
+                        <ActivitySection
+                            activities={activities}
+                            roles={roles}
+                            contacts={contacts}
+                            onAdd={onAddActivity}
+                            onDelete={onDeleteActivity}
+                            roleId={editingRole.id}
+                        />
+                    )}
+                </div>
             )}
 
             {roles.length === 0 ? (

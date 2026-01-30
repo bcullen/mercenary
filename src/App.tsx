@@ -7,7 +7,7 @@ import { ContactsView } from './components/ContactsView';
 import { ActivityLog } from './components/ActivityLog';
 
 function App() {
-    const [activeTab, setActiveTab] = useState<'roles' | 'contacts' | 'activity'>('roles');
+    const [activeTab, setActiveTab] = useState<'roles' | 'contacts'>('roles');
     const [roles, setRoles, roleOps] = useLocalStorage<Role[]>('m_roles', []);
     const [contacts, setContacts, contactOps] = useLocalStorage<Contact[]>('m_contacts', []);
     const [activities, setActivities, activityOps] = useLocalStorage<Activity[]>('m_activities', []);
@@ -43,28 +43,28 @@ function App() {
                 {activeTab === 'roles' && (
                     <RolesView
                         roles={roles}
+                        contacts={contacts}
+                        activities={activities}
                         onAdd={handleAddRole}
                         onUpdate={roleOps.updateItem}
                         onDelete={roleOps.removeItem}
+                        onAddActivity={handleAddActivity}
+                        onDeleteActivity={activityOps.removeItem}
                     />
                 )}
                 {activeTab === 'contacts' && (
                     <ContactsView
                         contacts={contacts}
+                        roles={roles}
+                        activities={activities}
                         onAdd={handleAddContact}
                         onUpdate={contactOps.updateItem}
                         onDelete={contactOps.removeItem}
+                        onAddActivity={handleAddActivity}
+                        onDeleteActivity={activityOps.removeItem}
                     />
                 )}
-                {activeTab === 'activity' && (
-                    <ActivityLog
-                        activities={activities}
-                        roles={roles}
-                        contacts={contacts}
-                        onAdd={handleAddActivity}
-                        onDelete={activityOps.removeItem}
-                    />
-                )}
+
             </main>
 
             <nav className="nav-bottom">
@@ -82,13 +82,7 @@ function App() {
                     <Users size={24} />
                     <span>Contacts</span>
                 </button>
-                <button
-                    className={`nav-item ${activeTab === 'activity' ? 'active' : ''} bg-none border-none p-0`}
-                    onClick={() => setActiveTab('activity')}
-                >
-                    <ClipboardList size={24} />
-                    <span>Activity</span>
-                </button>
+
             </nav>
         </div>
     );

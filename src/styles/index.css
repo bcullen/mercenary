@@ -168,6 +168,16 @@ button.secondary.danger:hover {
     text-transform: uppercase;
 }
 
+.badge-outline {
+    display: inline-block;
+    padding: 0.1rem 0.4rem;
+    border-radius: 4px;
+    font-size: 0.6rem;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+}
+
+
 .badge-interested {
     background: var(--secondary);
     color: white;
@@ -389,4 +399,71 @@ button.secondary.danger:hover {
     .table-cell {
         padding: 0.75rem 0.5rem;
     }
+}
+
+.bg-alt {
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.font-xxs {
+    font-size: 0.65rem;
+}
+
+.timeline {
+    position: relative;
+    padding-left: 1rem;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 7px;
+    top: 10px;
+    bottom: 10px;
+    width: 1px;
+    background: var(--border);
+}
+
+.timeline-item {
+    position: relative;
+    z-index: 1;
+}
+
+.timeline-icon {
+    background: var(--bg-main);
+    z-index: 2;
+    padding: 2px 0;
+}
+
+.hover-danger:hover {
+    color: #ef4444 !important;
+}
+
+.mt-2 {
+    margin-top: 1rem;
+}
+
+.mt-3 {
+    margin-top: 1.5rem;
+}
+
+.p-15 {
+    padding: 0.75rem;
+}
+
+.uppercase {
+    text-transform: uppercase;
+}
+
+.tracking-wider {
+    letter-spacing: 0.05em;
+}
+
+.py-04 {
+    padding-top: 0.4rem;
+    padding-bottom: 0.4rem;
+}
+
+.italic {
+    font-style: italic;
 }
