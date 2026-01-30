@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Plus, Mail, Phone, MessageSquare, Calendar, Trash2, Filter } from 'lucide-react';
+import { Plus, Mail, Phone, MessageSquare, Calendar, Trash2, Filter, Database } from 'lucide-react';
 import { Activity, Role, Contact } from '../types';
+import { seedTestData } from '../utils/seedData';
 
 interface ActivityLogProps {
     activities: Activity[];
@@ -115,8 +116,11 @@ export const ActivityLog: React.FC<ActivityLogProps> = ({ activities, roles, con
             )}
 
             {activities.length === 0 ? (
-                <div className="card empty-state">
-                    No activities logged yet.
+                <div className="card empty-state text-muted p-3">
+                    <p className="mb-3">No activities logged yet. Log your first interaction or load sample data.</p>
+                    <button className="secondary" onClick={seedTestData}>
+                        <Database size={18} /> Load Sample Data
+                    </button>
                 </div>
             ) : (
                 <div className="flex flex-col gap-1">
