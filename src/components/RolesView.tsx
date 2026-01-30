@@ -90,12 +90,25 @@ export const RolesView: React.FC<RolesViewProps> = ({ roles, onAdd, onUpdate, on
                             <option value="Rejected">Rejected</option>
                         </select>
                         <div className="flex-between gap-1">
-                            <button type="button" className="secondary flex-1" onClick={() => { setIsAdding(false); setEditingRole(null); }}>
-                                Cancel
-                            </button>
-                            <button type="submit" className="flex-1">
-                                {editingRole ? 'Save Changes' : 'Add'}
-                            </button>
+                            {editingRole ? (
+                                <>
+                                    <button type="button" className="secondary danger flex-1" onClick={() => { onDelete(editingRole.id); setEditingRole(null); }}>
+                                        <Trash2 size={16} /> Delete
+                                    </button>
+                                    <button type="submit" className="flex-1">
+                                        Save Changes
+                                    </button>
+                                </>
+                            ) : (
+                                <>
+                                    <button type="button" className="secondary flex-1" onClick={() => setIsAdding(false)}>
+                                        Cancel
+                                    </button>
+                                    <button type="submit" className="flex-1">
+                                        Add
+                                    </button>
+                                </>
+                            )}
                         </div>
                     </div>
                 </form>

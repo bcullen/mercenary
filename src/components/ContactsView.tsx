@@ -119,12 +119,25 @@ export const ContactsView: React.FC<ContactsViewProps> = ({ contacts, onAdd, onU
                                 : setNewContact({ ...newContact, notes: e.target.value })}
                         />
                         <div className="flex-between gap-1">
-                            <button type="button" className="secondary flex-1" onClick={() => { setIsAdding(false); setEditingContact(null); }}>
-                                Cancel
-                            </button>
-                            <button type="submit" className="flex-1">
-                                {editingContact ? 'Save Changes' : 'Add'}
-                            </button>
+                            {editingContact ? (
+                                <>
+                                    <button type="button" className="secondary danger flex-1" onClick={() => { onDelete(editingContact.id); setEditingContact(null); }}>
+                                        <Trash2 size={16} /> Delete
+                                    </button>
+                                    <button type="submit" className="flex-1">
+                                        Save Changes
+                                    </button>
+                                </>
+                            ) : (
+                                <>
+                                    <button type="button" className="secondary flex-1" onClick={() => setIsAdding(false)}>
+                                        Cancel
+                                    </button>
+                                    <button type="submit" className="flex-1">
+                                        Add
+                                    </button>
+                                </>
+                            )}
                         </div>
                     </div>
                 </form>

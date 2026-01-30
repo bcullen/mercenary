@@ -71,6 +71,17 @@ button.secondary {
     border: 1px solid var(--border);
 }
 
+button.secondary.danger {
+    color: #ef4444;
+    border-color: rgba(239, 68, 68, 0.2);
+}
+
+button.secondary.danger:hover {
+    background-color: rgba(239, 68, 68, 0.1);
+    border-color: #ef4444;
+}
+
+
 .input {
     width: 100%;
     padding: 0.75rem;
