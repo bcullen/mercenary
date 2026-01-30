@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Mail, Linkedin, MoreVertical, User, Briefcase, Database } from 'lucide-react';
+import { Plus, Mail, Linkedin, MoreVertical, User, Briefcase, Database, Edit2, Trash2, X } from 'lucide-react';
 import { Contact, ContactType } from '../types';
 import { seedTestData } from '../utils/seedData';
 
@@ -12,6 +12,8 @@ interface ContactsViewProps {
 
 export const ContactsView: React.FC<ContactsViewProps> = ({ contacts, onAdd, onUpdate, onDelete }) => {
     const [isAdding, setIsAdding] = useState(false);
+    const [editingContact, setEditingContact] = useState<Contact | null>(null);
+    const [activeMenu, setActiveMenu] = useState<string | null>(null);
     const [newContact, setNewContact] = useState<Omit<Contact, 'id'>>({
         name: '',
         type: 'Recruiter',
@@ -23,37 +25,59 @@ export const ContactsView: React.FC<ContactsViewProps> = ({ contacts, onAdd, onU
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        if (!newContact.name) return;
-        onAdd(newContact);
-        setNewContact({ name: '', type: 'Recruiter', company: '', email: '', linkedin: '', notes: '' });
-        setIsAdding(false);
+        if (editingContact) {
+            onUpdate(editingContact.id, {
+                name: editingContact.name,
+                type: editingContact.type,
+                company: editingContact.company,
+                email: editingContact.email,
+                linkedin: editingContact.linkedin,
+                notes: editingContact.notes,
+            });
+            setEditingContact(null);
+        } else {
+            if (!newContact.name) return;
+            onAdd(newContact);
+            setNewContact({ name: '', type: 'Recruiter', company: '', email: '', linkedin: '', notes: '' });
+            setIsAdding(false);
+        }
     };
 
     return (
         <div className="container" style={{ maxWidth: '800px' }}>
             <div className="flex-between mb-3">
                 <h1 className="m-0">Contacts</h1>
-                {!isAdding && (
+                {!isAdding && !editingContact && (
                     <button onClick={() => setIsAdding(true)}>
                         <Plus size={20} /> Add Contact
                     </button>
                 )}
             </div>
 
-            {isAdding && (
+            {(isAdding || editingContact) && (
                 <form onSubmit={handleSubmit} className="card mb-3">
+                    <div className="flex-between mb-2">
+                        <h2 className="m-0 font-sm">{editingContact ? 'Edit Contact' : 'Add New Contact'}</h2>
+                        <button type="button" className="secondary p-04 br-50 bg-none border-none" onClick={() => { setIsAdding(false); setEditingContact(null); }}>
+                            <X size={18} />
+                        </button>
+                    </div>
                     <div className="flex flex-col gap-1">
                         <input
                             className="input"
                             placeholder="Name"
-                            value={newContact.name}
-                            onChange={(e) => setNewContact({ ...newContact, name: e.target.value })}
+                            value={editingContact ? editingContact.name : newContact.name}
+                            onChange={(e) => editingContact
+                                ? setEditingContact({ ...editingContact, name: e.target.value })
+                                : setNewContact({ ...newContact, name: e.target.value })}
                             required
                         />
                         <select
                             className="input"
-                            value={newContact.type}
-                            onChange={(e) => setNewContact({ ...newContact, type: e.target.value as ContactType })}
+                            value={editingContact ? editingContact.type : newContact.type}
+                            onChange={(e) => editingContact
+                                ? setEditingContact({ ...editingContact, type: e.target.value as ContactType })
+                                : setNewContact({ ...newContact, type: e.target.value as ContactType })}
                         >
                             <option value="Recruiter">Recruiter</option>
                             <option value="Hiring Manager">Hiring Manager</option>
@@ -63,35 +87,43 @@ export const ContactsView: React.FC<ContactsViewProps> = ({ contacts, onAdd, onU
                         <input
                             className="input"
                             placeholder="Company"
-                            value={newContact.company}
-                            onChange={(e) => setNewContact({ ...newContact, company: e.target.value })}
+                            value={editingContact ? editingContact.company : newContact.company}
+                            onChange={(e) => editingContact
+                                ? setEditingContact({ ...editingContact, company: e.target.value })
+                                : setNewContact({ ...newContact, company: e.target.value })}
                         />
                         <input
                             className="input"
                             placeholder="Email"
                             type="email"
-                            value={newContact.email}
-                            onChange={(e) => setNewContact({ ...newContact, email: e.target.value })}
+                            value={editingContact ? editingContact.email : newContact.email}
+                            onChange={(e) => editingContact
+                                ? setEditingContact({ ...editingContact, email: e.target.value })
+                                : setNewContact({ ...newContact, email: e.target.value })}
                         />
                         <input
                             className="input"
                             placeholder="LinkedIn URL"
-                            value={newContact.linkedin}
-                            onChange={(e) => setNewContact({ ...newContact, linkedin: e.target.value })}
+                            value={editingContact ? editingContact.linkedin : newContact.linkedin}
+                            onChange={(e) => editingContact
+                                ? setEditingContact({ ...editingContact, linkedin: e.target.value })
+                                : setNewContact({ ...newContact, linkedin: e.target.value })}
                         />
                         <textarea
                             className="input"
                             placeholder="Notes"
                             rows={3}
-                            value={newContact.notes}
-                            onChange={(e) => setNewContact({ ...newContact, notes: e.target.value })}
+                            value={editingContact ? editingContact.notes : newContact.notes}
+                            onChange={(e) => editingContact
+                                ? setEditingContact({ ...editingContact, notes: e.target.value })
+                                : setNewContact({ ...newContact, notes: e.target.value })}
                         />
                         <div className="flex-between gap-1">
-                            <button type="button" className="secondary flex-1" onClick={() => setIsAdding(false)}>
+                            <button type="button" className="secondary flex-1" onClick={() => { setIsAdding(false); setEditingContact(null); }}>
                                 Cancel
                             </button>
                             <button type="submit" className="flex-1">
-                                Add
+                                {editingContact ? 'Save Changes' : 'Add'}
                             </button>
                         </div>
                     </div>
@@ -138,13 +170,28 @@ export const ContactsView: React.FC<ContactsViewProps> = ({ contacts, onAdd, onU
                                     </a>
                                 )}
                             </div>
-                            <div className="table-cell actions">
+                            <div className="table-cell actions dropdown-container">
                                 <button
-                                    className="secondary p-04 br-50 bg-none border-none"
-                                    onClick={() => onDelete(contact.id)}
+                                    className="action-btn bg-none border-none p-0"
+                                    onClick={() => setActiveMenu(activeMenu === contact.id ? null : contact.id)}
+                                    title="Menu"
                                 >
-                                    <MoreVertical size={16} />
+                                    <MoreVertical size={18} />
                                 </button>
+
+                                {activeMenu === contact.id && (
+                                    <>
+                                        <div className="overlay" onClick={() => setActiveMenu(null)} />
+                                        <div className="dropdown-menu">
+                                            <button className="dropdown-item" onClick={() => { setEditingContact(contact); setActiveMenu(null); }}>
+                                                <Edit2 size={14} /> Edit
+                                            </button>
+                                            <button className="dropdown-item danger" onClick={() => { onDelete(contact.id); setActiveMenu(null); }}>
+                                                <Trash2 size={14} /> Delete
+                                            </button>
+                                        </div>
+                                    </>
+                                )}
                             </div>
                         </div>
                     ))}
