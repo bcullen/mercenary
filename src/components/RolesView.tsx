@@ -27,7 +27,7 @@ export const RolesView: React.FC<RolesViewProps> = ({ roles, onAdd, onUpdate, on
     };
 
     return (
-        <div className="container">
+        <div className="container" style={{ maxWidth: '800px' }}>
             <div className="flex-between mb-3">
                 <h1 className="m-0">Roles</h1>
                 {!isAdding && (
@@ -39,34 +39,40 @@ export const RolesView: React.FC<RolesViewProps> = ({ roles, onAdd, onUpdate, on
 
             {isAdding && (
                 <form onSubmit={handleSubmit} className="card mb-3">
-                    <input
-                        className="input mb-2"
-                        placeholder="Company"
-                        value={newRole.company}
-                        onChange={e => setNewRole({ ...newRole, company: e.target.value })}
-                        required
-                    />
-                    <input
-                        className="input mb-2"
-                        placeholder="Position"
-                        value={newRole.position}
-                        onChange={e => setNewRole({ ...newRole, position: e.target.value })}
-                        required
-                    />
-                    <select
-                        className="input mb-2"
-                        value={newRole.status}
-                        onChange={e => setNewRole({ ...newRole, status: e.target.value as RoleStatus })}
-                    >
-                        <option value="Interested">Interested</option>
-                        <option value="Applied">Applied</option>
-                        <option value="Interviewing">Interviewing</option>
-                        <option value="Offered">Offered</option>
-                        <option value="Rejected">Rejected</option>
-                    </select>
-                    <div className="flex-between gap-1">
-                        <button type="button" className="secondary flex-1" onClick={() => setIsAdding(false)}>Cancel</button>
-                        <button type="submit" className="flex-1">Add</button>
+                    <div className="flex flex-col gap-1">
+                        <input
+                            className="input"
+                            placeholder="Company"
+                            value={newRole.company}
+                            onChange={(e) => setNewRole({ ...newRole, company: e.target.value })}
+                            required
+                        />
+                        <input
+                            className="input"
+                            placeholder="Position"
+                            value={newRole.position}
+                            onChange={(e) => setNewRole({ ...newRole, position: e.target.value })}
+                            required
+                        />
+                        <select
+                            className="input"
+                            value={newRole.status}
+                            onChange={(e) => setNewRole({ ...newRole, status: e.target.value as RoleStatus })}
+                        >
+                            <option value="Interested">Interested</option>
+                            <option value="Applied">Applied</option>
+                            <option value="Interviewing">Interviewing</option>
+                            <option value="Offered">Offered</option>
+                            <option value="Rejected">Rejected</option>
+                        </select>
+                        <div className="flex-between gap-1">
+                            <button type="button" className="secondary flex-1" onClick={() => setIsAdding(false)}>
+                                Cancel
+                            </button>
+                            <button type="submit" className="flex-1">
+                                Add
+                            </button>
+                        </div>
                     </div>
                 </form>
             )}
@@ -79,32 +85,34 @@ export const RolesView: React.FC<RolesViewProps> = ({ roles, onAdd, onUpdate, on
                     </button>
                 </div>
             ) : (
-                <div className="flex flex-col gap-1">
-                    {roles.map(role => (
-                        <div key={role.id} className="card">
-                            <div className="flex-between mb-1">
-                                <h3 className="m-0">{role.position}</h3>
-                                <span className={`badge badge-${role.status.toLowerCase()}`}>
+                <div className="table">
+                    <div className="table-header">
+                        <div className="table-cell grow-2">Position / Company</div>
+                        <div className="table-cell shrink hide-mobile">Status</div>
+                        <div className="table-cell shrink hide-mobile">Applied</div>
+                        <div className="table-cell actions"></div>
+                    </div>
+                    {roles.map((role) => (
+                        <div key={role.id} className="table-row">
+                            <div className="table-cell grow-2 flex-col items-start overflow-hidden">
+                                <div className="font-600 w-full overflow-hidden" style={{ textOverflow: 'ellipsis' }}>
+                                    {role.position}
+                                </div>
+                                <div className="text-muted font-xs w-full overflow-hidden" style={{ textOverflow: 'ellipsis' }}>
+                                    {role.company}
+                                </div>
+                            </div>
+                            <div className="table-cell shrink hide-mobile">
+                                <span className={`badge badge-${role.status.toLowerCase()}`} style={{ fontSize: '0.65rem' }}>
                                     {role.status}
                                 </span>
                             </div>
-                            <p className="mb-2 text-muted">{role.company}</p>
-
-                            <div className="flex-between">
-                                <div className="flex gap-075 text-muted font-sm">
-                                    {role.dateApplied && (
-                                        <span className="flex items-center gap-05">
-                                            <Calendar size={14} /> {role.dateApplied}
-                                        </span>
-                                    )}
-                                    {role.link && (
-                                        <a href={role.link} target="_blank" rel="noreferrer" className="text-primary flex items-center gap-05">
-                                            <LinkIcon size={14} /> Job Post
-                                        </a>
-                                    )}
-                                </div>
+                            <div className="table-cell shrink hide-mobile text-muted">
+                                {role.dateApplied || '-'}
+                            </div>
+                            <div className="table-cell actions">
                                 <button
-                                    className="secondary p-04 br-50"
+                                    className="secondary p-04 br-50 bg-none border-none"
                                     onClick={() => onDelete(role.id)}
                                 >
                                     <MoreVertical size={16} />

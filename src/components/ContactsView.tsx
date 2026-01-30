@@ -30,7 +30,7 @@ export const ContactsView: React.FC<ContactsViewProps> = ({ contacts, onAdd, onU
     };
 
     return (
-        <div className="container">
+        <div className="container" style={{ maxWidth: '800px' }}>
             <div className="flex-between mb-3">
                 <h1 className="m-0">Contacts</h1>
                 {!isAdding && (
@@ -42,52 +42,58 @@ export const ContactsView: React.FC<ContactsViewProps> = ({ contacts, onAdd, onU
 
             {isAdding && (
                 <form onSubmit={handleSubmit} className="card mb-3">
-                    <input
-                        className="input mb-2"
-                        placeholder="Name"
-                        value={newContact.name}
-                        onChange={e => setNewContact({ ...newContact, name: e.target.value })}
-                        required
-                    />
-                    <select
-                        className="input mb-2"
-                        value={newContact.type}
-                        onChange={e => setNewContact({ ...newContact, type: e.target.value as ContactType })}
-                    >
-                        <option value="Recruiter">Recruiter</option>
-                        <option value="Hiring Manager">Hiring Manager</option>
-                        <option value="Personal">Personal</option>
-                        <option value="Other">Other</option>
-                    </select>
-                    <input
-                        className="input mb-2"
-                        placeholder="Company"
-                        value={newContact.company}
-                        onChange={e => setNewContact({ ...newContact, company: e.target.value })}
-                    />
-                    <input
-                        className="input mb-2"
-                        placeholder="Email"
-                        type="email"
-                        value={newContact.email}
-                        onChange={e => setNewContact({ ...newContact, email: e.target.value })}
-                    />
-                    <input
-                        className="input mb-2"
-                        placeholder="LinkedIn URL"
-                        value={newContact.linkedin}
-                        onChange={e => setNewContact({ ...newContact, linkedin: e.target.value })}
-                    />
-                    <textarea
-                        className="input mb-2"
-                        placeholder="Notes"
-                        rows={3}
-                        value={newContact.notes}
-                        onChange={e => setNewContact({ ...newContact, notes: e.target.value })}
-                    />
-                    <div className="flex-between gap-1">
-                        <button type="button" className="secondary flex-1" onClick={() => setIsAdding(false)}>Cancel</button>
-                        <button type="submit" className="flex-1">Add</button>
+                    <div className="flex flex-col gap-1">
+                        <input
+                            className="input"
+                            placeholder="Name"
+                            value={newContact.name}
+                            onChange={(e) => setNewContact({ ...newContact, name: e.target.value })}
+                            required
+                        />
+                        <select
+                            className="input"
+                            value={newContact.type}
+                            onChange={(e) => setNewContact({ ...newContact, type: e.target.value as ContactType })}
+                        >
+                            <option value="Recruiter">Recruiter</option>
+                            <option value="Hiring Manager">Hiring Manager</option>
+                            <option value="Personal">Personal</option>
+                            <option value="Other">Other</option>
+                        </select>
+                        <input
+                            className="input"
+                            placeholder="Company"
+                            value={newContact.company}
+                            onChange={(e) => setNewContact({ ...newContact, company: e.target.value })}
+                        />
+                        <input
+                            className="input"
+                            placeholder="Email"
+                            type="email"
+                            value={newContact.email}
+                            onChange={(e) => setNewContact({ ...newContact, email: e.target.value })}
+                        />
+                        <input
+                            className="input"
+                            placeholder="LinkedIn URL"
+                            value={newContact.linkedin}
+                            onChange={(e) => setNewContact({ ...newContact, linkedin: e.target.value })}
+                        />
+                        <textarea
+                            className="input"
+                            placeholder="Notes"
+                            rows={3}
+                            value={newContact.notes}
+                            onChange={(e) => setNewContact({ ...newContact, notes: e.target.value })}
+                        />
+                        <div className="flex-between gap-1">
+                            <button type="button" className="secondary flex-1" onClick={() => setIsAdding(false)}>
+                                Cancel
+                            </button>
+                            <button type="submit" className="flex-1">
+                                Add
+                            </button>
+                        </div>
                     </div>
                 </form>
             )}
@@ -100,46 +106,45 @@ export const ContactsView: React.FC<ContactsViewProps> = ({ contacts, onAdd, onU
                     </button>
                 </div>
             ) : (
-                <div className="flex flex-col gap-1">
-                    {contacts.map(contact => (
-                        <div key={contact.id} className="card">
-                            <div className="flex-between mb-1">
-                                <div className="flex items-center gap-075">
-                                    <div className="p-04 br-50 text-primary" style={{ background: 'var(--bg-main)', padding: '8px' }}>
-                                        <User size={20} />
-                                    </div>
-                                    <div>
-                                        <h3 className="m-0">{contact.name}</h3>
-                                        <span className="font-xs text-muted">{contact.type}</span>
-                                    </div>
+                <div className="table">
+                    <div className="table-header">
+                        <div className="table-cell grow-2">Name / Company</div>
+                        <div className="table-cell shrink">Type</div>
+                        <div className="table-cell shrink hide-mobile">Links</div>
+                        <div className="table-cell actions"></div>
+                    </div>
+                    {contacts.map((contact) => (
+                        <div key={contact.id} className="table-row">
+                            <div className="table-cell grow-2 flex-col items-start overflow-hidden">
+                                <div className="font-600 w-full overflow-hidden" style={{ textOverflow: 'ellipsis' }}>
+                                    {contact.name || 'Unknown'}
                                 </div>
+                                <div className="text-muted font-xs w-full overflow-hidden" style={{ textOverflow: 'ellipsis' }}>
+                                    {contact.company || '-'}
+                                </div>
+                            </div>
+                            <div className="table-cell shrink">
+                                <span className="font-xs" style={{ color: 'var(--text-muted)' }}>{contact.type}</span>
+                            </div>
+                            <div className="table-cell shrink hide-mobile gap-05">
+                                {contact.email && (
+                                    <a href={`mailto:${contact.email}`} className="text-primary hover-opacity" title="Email">
+                                        <Mail size={16} />
+                                    </a>
+                                )}
+                                {contact.linkedin && (
+                                    <a href={contact.linkedin} target="_blank" rel="noreferrer" className="text-primary hover-opacity" title="LinkedIn">
+                                        <Linkedin size={16} />
+                                    </a>
+                                )}
+                            </div>
+                            <div className="table-cell actions">
                                 <button
-                                    className="secondary p-04 br-50"
+                                    className="secondary p-04 br-50 bg-none border-none"
                                     onClick={() => onDelete(contact.id)}
                                 >
                                     <MoreVertical size={16} />
                                 </button>
-                            </div>
-
-                            {contact.company && (
-                                <div className="flex items-center gap-05 mb-2 font-sm text-muted">
-                                    <Briefcase size={14} /> {contact.company}
-                                </div>
-                            )}
-
-                            <div className="flex gap-1" style={{ marginTop: '1rem' }}>
-                                {contact.email && (
-                                    <a href={`mailto:${contact.email}`} className="nav-item font-sm">
-                                        <Mail size={18} />
-                                        <span>Email</span>
-                                    </a>
-                                )}
-                                {contact.linkedin && (
-                                    <a href={contact.linkedin} target="_blank" rel="noreferrer" className="nav-item font-sm">
-                                        <Linkedin size={18} />
-                                        <span>LinkedIn</span>
-                                    </a>
-                                )}
                             </div>
                         </div>
                     ))}

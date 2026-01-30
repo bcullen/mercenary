@@ -274,3 +274,95 @@ button.secondary {
 .p-3 {
     padding: 3rem;
 }
+
+/* Compact Table System */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    font-size: 0.875rem;
+}
+
+.table-header {
+    display: flex;
+    background: rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid var(--border);
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    letter-spacing: 0.05em;
+}
+
+.table-row {
+    display: flex;
+    border-bottom: 1px solid var(--border);
+    transition: background 0.1s ease;
+    align-items: center;
+}
+
+.table-row:last-child {
+    border-bottom: none;
+}
+
+.table-row:hover {
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.table-cell {
+    padding: 0.75rem 1rem;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.table-cell.actions {
+    flex: 0 0 50px;
+    justify-content: flex-end;
+}
+
+.table-cell.shrink {
+    flex: 0 0 auto;
+    min-width: 120px;
+}
+
+.table-cell.grow-2 {
+    flex: 2;
+}
+
+.table-cell.grow-3 {
+    flex: 3;
+}
+
+/* Utilities */
+.justify-center {
+    justify-content: center;
+}
+
+.mt-05 {
+    margin-top: 0.5rem;
+}
+
+.gap-025 {
+    gap: 0.25rem;
+}
+
+.overflow-hidden {
+    overflow: hidden;
+}
+
+@media (max-width: 600px) {
+    .hide-mobile {
+        display: none;
+    }
+
+    .table-cell {
+        padding: 0.75rem 0.5rem;
+    }
+}
