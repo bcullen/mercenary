@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Mail, Linkedin, User, Briefcase, Database, Edit2, Trash2, X } from 'lucide-react';
+import { Plus, Mail, Linkedin, Database, Trash2, X } from 'lucide-react';
 import { Contact, ContactType } from '../types';
 import { seedTestData } from '../utils/seedData';
 
@@ -13,7 +13,6 @@ interface ContactsViewProps {
 export const ContactsView: React.FC<ContactsViewProps> = ({ contacts, onAdd, onUpdate, onDelete }) => {
     const [isAdding, setIsAdding] = useState(false);
     const [editingContact, setEditingContact] = useState<Contact | null>(null);
-    const [activeMenu, setActiveMenu] = useState<string | null>(null);
     const [newContact, setNewContact] = useState<Omit<Contact, 'id'>>({
         name: '',
         type: 'Recruiter',
@@ -160,8 +159,8 @@ export const ContactsView: React.FC<ContactsViewProps> = ({ contacts, onAdd, onU
                     {contacts.map((contact) => (
                         <div key={contact.id} className="table-row">
                             <div
-                                className="table-cell grow-2 flex-col items-start overflow-hidden clickable-cell dropdown-container"
-                                onClick={() => setActiveMenu(activeMenu === contact.id ? null : contact.id)}
+                                className="table-cell grow-2 flex-col items-start overflow-hidden clickable-cell"
+                                onClick={() => setEditingContact(contact)}
                             >
                                 <div className="font-600 w-full overflow-hidden" style={{ textOverflow: 'ellipsis' }}>
                                     {contact.name || 'Unknown'}
@@ -169,20 +168,6 @@ export const ContactsView: React.FC<ContactsViewProps> = ({ contacts, onAdd, onU
                                 <div className="text-muted font-xs w-full overflow-hidden" style={{ textOverflow: 'ellipsis' }}>
                                     {contact.company || '-'}
                                 </div>
-
-                                {activeMenu === contact.id && (
-                                    <>
-                                        <div className="overlay" onClick={(e) => { e.stopPropagation(); setActiveMenu(null); }} />
-                                        <div className="dropdown-menu" style={{ left: '0', right: 'auto', top: '90%' }}>
-                                            <button className="dropdown-item" onClick={(e) => { e.stopPropagation(); setEditingContact(contact); setActiveMenu(null); }}>
-                                                <Edit2 size={14} /> Edit
-                                            </button>
-                                            <button className="dropdown-item danger" onClick={(e) => { e.stopPropagation(); onDelete(contact.id); setActiveMenu(null); }}>
-                                                <Trash2 size={14} /> Delete
-                                            </button>
-                                        </div>
-                                    </>
-                                )}
                             </div>
                             <div className="table-cell shrink">
                                 <span className="font-xs" style={{ color: 'var(--text-muted)' }}>{contact.type}</span>

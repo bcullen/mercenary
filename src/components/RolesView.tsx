@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Link as LinkIcon, Calendar, Database, Edit2, Trash2, X } from 'lucide-react';
+import { Plus, Link as LinkIcon, Calendar, Database, Trash2, X } from 'lucide-react';
 import { Role, RoleStatus } from '../types';
 import { seedTestData } from '../utils/seedData';
 
@@ -13,7 +13,6 @@ interface RolesViewProps {
 export const RolesView: React.FC<RolesViewProps> = ({ roles, onAdd, onUpdate, onDelete }) => {
     const [isAdding, setIsAdding] = useState(false);
     const [editingRole, setEditingRole] = useState<Role | null>(null);
-    const [activeMenu, setActiveMenu] = useState<string | null>(null);
     const [newRole, setNewRole] = useState<Omit<Role, 'id' | 'updatedAt'>>({
         company: '',
         position: '',
@@ -131,8 +130,8 @@ export const RolesView: React.FC<RolesViewProps> = ({ roles, onAdd, onUpdate, on
                     {roles.map((role) => (
                         <div key={role.id} className="table-row">
                             <div
-                                className="table-cell grow-2 flex-col items-start overflow-hidden clickable-cell dropdown-container"
-                                onClick={() => setActiveMenu(activeMenu === role.id ? null : role.id)}
+                                className="table-cell grow-2 flex-col items-start overflow-hidden clickable-cell"
+                                onClick={() => setEditingRole(role)}
                             >
                                 <div className="font-600 w-full overflow-hidden" style={{ textOverflow: 'ellipsis' }}>
                                     {role.position}
@@ -140,20 +139,6 @@ export const RolesView: React.FC<RolesViewProps> = ({ roles, onAdd, onUpdate, on
                                 <div className="text-muted font-xs w-full overflow-hidden" style={{ textOverflow: 'ellipsis' }}>
                                     {role.company}
                                 </div>
-
-                                {activeMenu === role.id && (
-                                    <>
-                                        <div className="overlay" onClick={(e) => { e.stopPropagation(); setActiveMenu(null); }} />
-                                        <div className="dropdown-menu" style={{ left: '0', right: 'auto', top: '90%' }}>
-                                            <button className="dropdown-item" onClick={(e) => { e.stopPropagation(); setEditingRole(role); setActiveMenu(null); }}>
-                                                <Edit2 size={14} /> Edit
-                                            </button>
-                                            <button className="dropdown-item danger" onClick={(e) => { e.stopPropagation(); onDelete(role.id); setActiveMenu(null); }}>
-                                                <Trash2 size={14} /> Delete
-                                            </button>
-                                        </div>
-                                    </>
-                                )}
                             </div>
                             <div className="table-cell shrink hide-mobile">
                                 <span className={`badge badge-${role.status.toLowerCase()}`} style={{ fontSize: '0.65rem' }}>
