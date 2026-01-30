@@ -1,5 +1,5 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Plus, Link as LinkIcon, Calendar, MoreVertical, Database, Edit2, Trash2, X } from 'lucide-react';
+import React, { useState } from 'react';
+import { Plus, Link as LinkIcon, Calendar, Database, Edit2, Trash2, X } from 'lucide-react';
 import { Role, RoleStatus } from '../types';
 import { seedTestData } from '../utils/seedData';
 
@@ -114,17 +114,33 @@ export const RolesView: React.FC<RolesViewProps> = ({ roles, onAdd, onUpdate, on
                         <div className="table-cell grow-2">Position / Company</div>
                         <div className="table-cell shrink hide-mobile">Status</div>
                         <div className="table-cell shrink hide-mobile">Applied</div>
-                        <div className="table-cell actions"></div>
                     </div>
                     {roles.map((role) => (
                         <div key={role.id} className="table-row">
-                            <div className="table-cell grow-2 flex-col items-start overflow-hidden">
+                            <div
+                                className="table-cell grow-2 flex-col items-start overflow-hidden clickable-cell dropdown-container"
+                                onClick={() => setActiveMenu(activeMenu === role.id ? null : role.id)}
+                            >
                                 <div className="font-600 w-full overflow-hidden" style={{ textOverflow: 'ellipsis' }}>
                                     {role.position}
                                 </div>
                                 <div className="text-muted font-xs w-full overflow-hidden" style={{ textOverflow: 'ellipsis' }}>
                                     {role.company}
                                 </div>
+
+                                {activeMenu === role.id && (
+                                    <>
+                                        <div className="overlay" onClick={(e) => { e.stopPropagation(); setActiveMenu(null); }} />
+                                        <div className="dropdown-menu" style={{ left: '0', right: 'auto', top: '90%' }}>
+                                            <button className="dropdown-item" onClick={(e) => { e.stopPropagation(); setEditingRole(role); setActiveMenu(null); }}>
+                                                <Edit2 size={14} /> Edit
+                                            </button>
+                                            <button className="dropdown-item danger" onClick={(e) => { e.stopPropagation(); onDelete(role.id); setActiveMenu(null); }}>
+                                                <Trash2 size={14} /> Delete
+                                            </button>
+                                        </div>
+                                    </>
+                                )}
                             </div>
                             <div className="table-cell shrink hide-mobile">
                                 <span className={`badge badge-${role.status.toLowerCase()}`} style={{ fontSize: '0.65rem' }}>
@@ -133,29 +149,6 @@ export const RolesView: React.FC<RolesViewProps> = ({ roles, onAdd, onUpdate, on
                             </div>
                             <div className="table-cell shrink hide-mobile text-muted">
                                 {role.dateApplied || '-'}
-                            </div>
-                            <div className="table-cell actions dropdown-container">
-                                <button
-                                    className="action-btn bg-none border-none p-0"
-                                    onClick={() => setActiveMenu(activeMenu === role.id ? null : role.id)}
-                                    title="Menu"
-                                >
-                                    <MoreVertical size={18} />
-                                </button>
-
-                                {activeMenu === role.id && (
-                                    <>
-                                        <div className="overlay" onClick={() => setActiveMenu(null)} />
-                                        <div className="dropdown-menu">
-                                            <button className="dropdown-item" onClick={() => { setEditingRole(role); setActiveMenu(null); }}>
-                                                <Edit2 size={14} /> Edit
-                                            </button>
-                                            <button className="dropdown-item danger" onClick={() => { onDelete(role.id); setActiveMenu(null); }}>
-                                                <Trash2 size={14} /> Delete
-                                            </button>
-                                        </div>
-                                    </>
-                                )}
                             </div>
                         </div>
                     ))}

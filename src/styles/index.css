@@ -319,6 +319,16 @@ button.secondary {
     align-items: center;
 }
 
+.clickable-cell {
+    cursor: pointer;
+    transition: background 0.1s ease;
+}
+
+.clickable-cell:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+
 .table-cell.text-truncate {
     overflow: hidden;
     text-overflow: ellipsis;
