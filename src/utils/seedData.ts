@@ -80,6 +80,44 @@ export const FAKE_ACTIVITIES: Activity[] = [
         type: 'Message',
         description: 'Messaged John on LinkedIn to grab coffee and talk about current openings.',
         date: '2026-01-27'
+    },
+    {
+        id: 'a4',
+        roleId: 'r2',
+        contactId: 'c3',
+        type: 'Email',
+        description: 'Emily sent a follow-up email about the second round of interviews.',
+        date: '2026-01-26'
+    },
+    {
+        id: 'a5',
+        roleId: 'r1',
+        contactId: 'c1',
+        type: 'Call',
+        description: 'Quick check-in call with Sarah regarding benefits package.',
+        date: '2026-01-22'
+    },
+    {
+        id: 'a6',
+        roleId: 'r3',
+        type: 'Follow-up',
+        description: 'Internal reminder to find a contact at InnovateSoft.',
+        date: '2026-01-29'
+    },
+    {
+        id: 'a7',
+        roleId: 'r2',
+        contactId: 'c3',
+        type: 'Interview',
+        description: 'Round 2: System design and architectural deep dive.',
+        date: '2026-01-28'
+    },
+    {
+        id: 'a8',
+        contactId: 'c2',
+        type: 'Call',
+        description: 'Coffee chat with John. He mentioned a vacancy on the mobile team.',
+        date: '2026-01-30'
     }
 ];
 

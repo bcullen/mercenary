@@ -171,10 +171,7 @@ export const ContactsView: React.FC<ContactsViewProps> = ({
 
             {contacts.length === 0 ? (
                 <div className="card empty-state text-muted p-3">
-                    <p className="mb-3">No contacts yet. Add your first recruiter or hiring manager, or load sample data.</p>
-                    <button className="secondary" onClick={seedTestData}>
-                        <Database size={18} /> Load Sample Data
-                    </button>
+                    <p>No contacts yet. Add your first recruiter or hiring manager.</p>
                 </div>
             ) : (
                 <div className="table">

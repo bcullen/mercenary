@@ -142,10 +142,7 @@ export const RolesView: React.FC<RolesViewProps> = ({
 
             {roles.length === 0 ? (
                 <div className="card empty-state text-muted p-3">
-                    <p className="mb-3">No roles tracked yet. Click Add to begin or load sample data.</p>
-                    <button className="secondary" onClick={seedTestData}>
-                        <Database size={18} /> Load Sample Data
-                    </button>
+                    <p>No roles tracked yet. Click Add to begin.</p>
                 </div>
             ) : (
                 <div className="table">
